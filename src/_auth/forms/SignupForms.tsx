@@ -33,9 +33,6 @@ const SignupForms = () => {
     const newUser=await createUserAccount(values);
     console.log(newUser);
     
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
   }
   return (
     <Form {...form}>
