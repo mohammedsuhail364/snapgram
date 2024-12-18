@@ -24,10 +24,10 @@ import { useUserContext } from "@/context/AuthContext";
 const SignupForms = () => {
   const { toast } = useToast();
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
-  const { mutateAsync: createUserAccount, isLoading: isCreatingUser } =
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
     useCreateUserAccount();
-  const { mutateAsync: signInAccount, isLoading: isSigningIn } =
-    useSignInAccount();
+  const { mutateAsync: signInAccount, isPending: isSigningInUser } =
+    useSignInAccount(); 
   const navigate=useNavigate();
   const form = useForm<z.infer<typeof signUpValidation>>({
     resolver: zodResolver(signUpValidation),
@@ -44,18 +44,21 @@ const SignupForms = () => {
     const newUser = await createUserAccount(values);
     if (!newUser) {
       return toast({
-        title: "Sign up failed.Please try again",
+        title: "sign up 1  failed.Please try again",
       });
     }
     const session = await signInAccount({
       email: values.email,
       password: values.password,
     });
-
+    console.log(session);
+    
     if (!session) {
       return toast({ title: "Sign in failed . Please try again" });
     }
     const isLoggedIn = await checkAuthUser();
+    console.log(isLoggedIn);
+    
     if (isLoggedIn) {
       form.reset();
       navigate('/')
@@ -122,7 +125,7 @@ const SignupForms = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter your email"
@@ -141,7 +144,7 @@ const SignupForms = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter your password"
@@ -156,7 +159,7 @@ const SignupForms = () => {
             )}
           />
           <Button type="submit" className=" shad-button_primary">
-            {isCreatingUser ? (
+            {isCreatingAccount ? (
               <div className=" flex-center gap-2">
                 <Loader />
                 Loading...
