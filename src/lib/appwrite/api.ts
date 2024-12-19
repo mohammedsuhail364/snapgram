@@ -73,3 +73,14 @@ export async function getCurrentUser() {
     console.log(error);
   }
 }
+
+export async function signOutAccount() {
+  try {
+    const session=await account.deleteSession('current');
+    localStorage.removeItem('cookieFallback');
+    return session;
+  } catch (error) {
+    console.log(error);
+    
+  }
+}

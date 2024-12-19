@@ -19,6 +19,7 @@ import {
   useSignInAccount,
 } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
+import { useEffect } from "react";
 
 const SigninForms = () => {
   const { toast } = useToast();
@@ -55,6 +56,11 @@ const SigninForms = () => {
       return toast({ title: "Sign up failed.Please try again" });
     }
   }
+  useEffect(()=>{
+      if (localStorage.getItem("cookieFallback") ){
+        navigate('/')
+      }
+    },[])
   return (
     <Form {...form}>
       <div className=" sm:w-420 flex-center flex-col">
