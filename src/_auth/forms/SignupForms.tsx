@@ -24,10 +24,10 @@ import { useEffect } from "react";
 
 const SignupForms = () => {
   const { toast } = useToast();
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { checkAuthUser } = useUserContext();
   const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
     useCreateUserAccount();
-  const { mutateAsync: signInAccount, isPending: isSigningInUser } =
+  const { mutateAsync: signInAccount } =
     useSignInAccount(); 
   const navigate=useNavigate();
   const form = useForm<z.infer<typeof signUpValidation>>({
