@@ -17,8 +17,10 @@ export async function createUserAccount(user: INewUser) {
       name: newAccount.name,
       email: newAccount.email,
       username: user.username,
-      imageUrl: avatarUrl,
+      imageUrl: new URL(avatarUrl),
     });
+    console.log(newUser);
+    
 
     return newAccount;
   } catch (error) {
@@ -46,17 +48,36 @@ export async function saveUserToDB(user: {
   }
 }
 
+// export async function signInAccount(user: { email: string; password: string }) {
+//   try {
+//     const session = await account.createEmailPasswordSession(
+//       user.email,
+//       user.password
+//     );
+//     return session;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const session = await account.createEmailPasswordSession(
-      user.email,
-      user.password
-    );
-    return session;
-  } catch (error) {
-    console.log(error);
+    // Check if a session already exists
+    const currentSession = await account.getSession("current").catch(() => null);
+
+    if (currentSession) {
+      console.warn("Existing session found. Deleting session...");
+      await account.deleteSession("current");
+    }
+
+    // Create a new session after deleting the old one
+    return await account.createEmailPasswordSession(user.email, user.password);
+  } catch (error: any) {
+    console.error("Error signing in:", error.message || error);
+    throw new Error(error.message || "Failed to sign in. Please try again.");
   }
 }
+
+
 
 export async function getCurrentUser() {
   try {
